@@ -1,0 +1,3 @@
+# Keep Render's SQLite file writable
+data/
+!data/.gitkeep

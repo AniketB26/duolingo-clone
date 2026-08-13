@@ -1,0 +1,5 @@
+{
+  "name": "duolingo-clone",
+  "private": true,
+  "description": "Duolingo clone — Next.js frontend + FastAPI backend"
+}

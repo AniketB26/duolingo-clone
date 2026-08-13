@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --feather: #58cc02;
+  --macaw: #1cb0f6;
+  --cardinal: #ff4b4b;
+  --bee: #ffc800;
+  --eel: #4b4b4b;
+  --swan: #e5e5e5;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: #fff;
+  color: #4b4b4b;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid #1cb0f6;
+  outline-offset: 2px;
+}
+
+.bump {
+  box-shadow: 0 4px 0 0 currentColor;
+}
+.bump:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
