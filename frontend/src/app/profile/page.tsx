@@ -9,7 +9,7 @@ export default function ProfilePage() {
   const { data } = useQuery({ queryKey: ["profile"], queryFn: api.profile });
   const me = data?.me;
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-bg">
       <SideNav />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
@@ -18,7 +18,7 @@ export default function ProfilePage() {
             <Owl className="h-20 w-20" />
             <div>
               <h1 className="font-display text-2xl font-bold">{me?.display_name ?? "Learner"}</h1>
-              <p className="font-bold text-wolf">@{me?.username}</p>
+              <p className="font-bold text-muted">@{me?.username}</p>
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-3">
@@ -30,9 +30,9 @@ export default function ProfilePage() {
           <h2 className="mt-8 font-display text-xl font-bold">Achievements</h2>
           <ul className="mt-3 space-y-2">
             {data?.achievements.map((a) => (
-              <li key={a.id} className="rounded-2xl border-2 border-swan px-4 py-3">
+              <li key={a.id} className="rounded-2xl border-2 border-line bg-surface px-4 py-3">
                 <p className="font-extrabold">{a.title}</p>
-                <p className="text-sm font-bold text-wolf">{a.detail}</p>
+                <p className="text-sm font-bold text-muted">{a.detail}</p>
               </li>
             ))}
           </ul>
@@ -45,8 +45,8 @@ export default function ProfilePage() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border-2 border-swan p-4">
-      <p className="text-xs font-extrabold uppercase text-wolf">{label}</p>
+    <div className="rounded-2xl border-2 border-line bg-surface p-4">
+      <p className="text-xs font-extrabold uppercase text-muted">{label}</p>
       <p className="font-display text-xl font-bold">{value}</p>
     </div>
   );

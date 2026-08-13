@@ -37,7 +37,7 @@ function MultipleChoice({ exercise }: { exercise: Exercise }) {
             disabled={locked}
             onClick={() => setSelected(i)}
             className={`rounded-2xl border-2 border-b-4 px-4 py-3 text-left font-extrabold ${
-              on ? "border-macaw bg-[#ddf4ff] text-macaw" : "border-swan text-eel"
+              on ? "border-macaw bg-select text-macaw" : "border-line text-fg"
             }`}
           >
             {opt}
@@ -65,14 +65,14 @@ function TranslateBank({ exercise }: { exercise: Exercise }) {
   }
   return (
     <div>
-      <div className="mb-6 flex min-h-[56px] flex-wrap gap-2 border-b-2 border-swan pb-4">
+      <div className="mb-6 flex min-h-[56px] flex-wrap gap-2 border-b-2 border-line pb-4">
         {selected.map((w, i) => (
           <button
             key={`${w}-${i}`}
             type="button"
             disabled={locked}
             onClick={() => setSelected(selected.filter((_, j) => j !== i))}
-            className="rounded-xl border-2 border-b-4 border-swan bg-white px-3 py-2 font-extrabold"
+            className="rounded-xl border-2 border-b-4 border-line bg-surface px-3 py-2 font-extrabold"
           >
             {w}
           </button>
@@ -85,7 +85,7 @@ function TranslateBank({ exercise }: { exercise: Exercise }) {
             type="button"
             disabled={locked}
             onClick={() => setSelected([...selected, w])}
-            className="rounded-xl border-2 border-b-4 border-swan bg-white px-3 py-2 font-extrabold"
+            className="rounded-xl border-2 border-b-4 border-line bg-surface px-3 py-2 font-extrabold"
           >
             {w}
           </button>
@@ -128,7 +128,7 @@ function MatchPairs({ exercise }: { exercise: Exercise }) {
             disabled={locked}
             onClick={() => chooseLeft(item)}
             className={`rounded-2xl border-2 border-b-4 px-3 py-3 font-extrabold ${
-              pick === item || selected[item] ? "border-macaw bg-[#ddf4ff] text-macaw" : "border-swan"
+              pick === item || selected[item] ? "border-macaw bg-select text-macaw" : "border-line"
             }`}
           >
             {item}
@@ -145,7 +145,7 @@ function MatchPairs({ exercise }: { exercise: Exercise }) {
               disabled={locked}
               onClick={() => chooseRight(item)}
               className={`rounded-2xl border-2 border-b-4 px-3 py-3 font-extrabold ${
-                taken ? "border-feather bg-[#d7ffb8] text-feather" : "border-swan"
+                taken ? "border-feather bg-ok text-feather" : "border-line"
               }`}
             >
               {item}
@@ -169,7 +169,7 @@ function FillBlank({ exercise }: { exercise: Exercise }) {
         disabled={locked}
         value={selected}
         onChange={(e) => setSelected(e.target.value)}
-        className="w-full rounded-2xl border-2 border-swan px-4 py-3 text-center text-lg font-bold"
+        className="w-full rounded-2xl border-2 border-line bg-surface px-4 py-3 text-center text-lg font-bold"
         placeholder="Type the missing word"
       />
     </div>
@@ -185,7 +185,7 @@ function TypeAnswer({ exercise }: { exercise: Exercise }) {
       disabled={locked}
       value={selected}
       onChange={(e) => setSelected(e.target.value)}
-      className="w-full rounded-2xl border-2 border-swan px-4 py-3 text-center text-lg font-bold"
+      className="w-full rounded-2xl border-2 border-line bg-surface px-4 py-3 text-center text-lg font-bold"
       placeholder="Type your answer"
     />
   );

@@ -248,3 +248,53 @@ Living log of architectural choices for this Duolingo clone. Each entry records 
 
 **Effects:** Render must use 3.13. If the dashboard still shows 3.14, set `PYTHON_VERSION` to `3.13.3` and redeploy.
 
+---
+
+## 17. Shuffle translate word banks on the API (not in the UI)
+
+**Context:** Tap-the-words / translate exercises listed the correct tiles first, in solution order. Learners could tap left-to-right without reading.
+
+**Options:** Shuffle in the React component; shuffle once in seed JSON; shuffle on every `GET /api/lessons/{id}`.
+
+**Choice:** `random.shuffle` in `_client_content` when serializing `translate_bank` (and the right column of `match_pairs`). Seed JSON was also reordered so new databases are not ordered. Grading still compares the submitted word list to `solution.words` in order.
+
+**Why this is correct:** Existing SQLite files are not re-seeded (`seed_if_empty`). API shuffle fixes live DBs without a migration. Shuffling on the server means the client never sees a spoiler order even if someone inspects the payload before React runs.
+
+**Rejected:** Client-only shuffle — a refresh mid-lesson could reshuffle, and the network payload would still leak order. Rewriting only seed data — Render/local DBs already seeded would stay broken. Changing the solution to unordered bags — would accept scrambled sentences.
+
+**Effects:** Each lesson load shows a different tile order. Correct sequence is still required.
+
+---
+
+## 18. Dark mode via CSS variables + `html.dark` (not per-component hex)
+
+**Context:** Bonus asked for dark mode. Gemini tokens: background `#131F24`, borders `#37464F`, keep Feather Green / Cardinal / Bee.
+
+**Options:** `dark:` Tailwind hex on every class; CSS variables on `:root` / `html.dark`; `prefers-color-scheme` only; next-themes package.
+
+**Choice:** Semantic tokens (`bg`, `surface`, `fg`, `muted`, `line`, `hover`, `select`, `ok`, `bad`) in `globals.css`. Tailwind `darkMode: "class"`. Boot script reads `localStorage.lingo-theme` before paint. Toggle in the top bar and Settings. Brand greens/reds/yellows stay hardcoded hex.
+
+**Why this is correct:** One token change rethemes path, lesson player, chrome, profile, leaderboard, shop, and settings. The boot script avoids a light flash. `class` strategy lets the user override OS preference, which is what Duolingo settings do.
+
+**Rejected:** Sprinkling `dark:bg-[#131F24]` everywhere — easy to miss a screen. `prefers-color-scheme` only — no in-app control. `next-themes` — extra dependency for a two-state toggle. Inverting brand greens — fails contrast and the assignment look.
+
+**Effects:** Theme persists in `localStorage`. Hydration uses `suppressHydrationWarning` on `<html>`. Audio is still not implemented.
+
+---
+
+## 19. Fresh path: no pre-completed Greetings lesson
+
+**Context:** Seed marked Greetings 1 complete so the path showed 1/2 crowns and skipped the first lesson. The product should start unplayed.
+
+**Options:** Leave demo progress; delete `app.db` by hand; change seed only; seed + one-time migrate existing DBs.
+
+**Choice:** Stop writing `UserProgress` in `_seed`. Default learner starts at 0 XP, 0 streak, full hearts. `app_meta.seed_version = v2-unplayed` runs once on existing databases: wipe `user_progress` and reset the default learner. Seeded leaderboard users keep their XP.
+
+**Why this is correct:** Local and Render SQLite already exist, so seed-only would not change live apps. A versioned one-time reset updates them without wiping every server restart (which would destroy real play).
+
+**Rejected:** Resetting progress on every boot — local `--reload` would erase lessons. Leaving 80 XP / 5-day streak with no lessons done — stats would contradict the path.
+
+**Effects:** First node is Greetings 1, unlocked, 0 crowns. Leaderboard still has Maya/Leo/etc. above a new learner.
+
+
+

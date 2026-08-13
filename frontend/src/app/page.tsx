@@ -5,7 +5,7 @@ import { LearningPath } from "@/components/LearningPath";
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-bg">
       <SideNav />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />

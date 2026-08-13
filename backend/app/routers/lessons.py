@@ -1,4 +1,5 @@
 import json
+import random
 import unicodedata
 from typing import Any
 
@@ -52,6 +53,20 @@ def _grade(exercise: Exercise, answer: Any) -> tuple[bool, Any]:
     return False, None
 
 
+def _client_content(exercise: Exercise) -> dict:
+    """Strip nothing from content, but shuffle banks so the solution is not in order."""
+    content = json.loads(exercise.content_json)
+    if exercise.exercise_type == "translate_bank":
+        bank = list(content.get("bank") or [])
+        random.shuffle(bank)
+        content["bank"] = bank
+    if exercise.exercise_type == "match_pairs":
+        right = list(content.get("right") or [])
+        random.shuffle(right)
+        content["right"] = right
+    return content
+
+
 @router.get("/{lesson_id}", response_model=LessonOut)
 def get_lesson(lesson_id: int, db: Session = Depends(get_db)):
     user = get_current_user(db)
@@ -72,7 +87,7 @@ def get_lesson(lesson_id: int, db: Session = Depends(get_db)):
                 id=e.id,
                 exercise_type=e.exercise_type,  # type: ignore[arg-type]
                 prompt=e.prompt,
-                content=json.loads(e.content_json),
+                content=_client_content(e),
             )
             for e in exercises
         ],

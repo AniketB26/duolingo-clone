@@ -7,8 +7,29 @@
   --macaw: #1cb0f6;
   --cardinal: #ff4b4b;
   --bee: #ffc800;
-  --eel: #4b4b4b;
-  --swan: #e5e5e5;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-fg: #4b4b4b;
+  --color-muted: #777777;
+  --color-line: #e5e5e5;
+  --color-hover: #f7f7f7;
+  --color-select: #ddf4ff;
+  --color-ok: #d7ffb8;
+  --color-bad: #ffdfe0;
+  --color-overlay: rgba(0, 0, 0, 0.4);
+}
+
+html.dark {
+  --color-bg: #131f24;
+  --color-surface: #202f36;
+  --color-fg: #f1f7fb;
+  --color-muted: #afafaf;
+  --color-line: #37464f;
+  --color-hover: #2a3a42;
+  --color-select: #1d3d4d;
+  --color-ok: #1c3d24;
+  --color-bad: #3d1c22;
+  --color-overlay: rgba(0, 0, 0, 0.65);
 }
 
 html,
@@ -17,8 +38,8 @@ body {
 }
 
 body {
-  background: #fff;
-  color: #4b4b4b;
+  background: var(--color-bg);
+  color: var(--color-fg);
 }
 
 button:focus-visible,
@@ -26,6 +47,11 @@ a:focus-visible,
 input:focus-visible {
   outline: 3px solid #1cb0f6;
   outline-offset: 2px;
+}
+
+input {
+  background: var(--color-surface);
+  color: var(--color-fg);
 }
 
 .bump {

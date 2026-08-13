@@ -4,7 +4,7 @@ import { BottomNav, SideNav, TopBar } from "@/components/Chrome";
 
 export function Shell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-bg">
       <SideNav />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />

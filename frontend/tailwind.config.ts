@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
@@ -17,6 +18,15 @@ const config: Config = {
         wolf: "#777777",
         swan: "#E5E5E5",
         snow: "#FFFFFF",
+        bg: "var(--color-bg)",
+        surface: "var(--color-surface)",
+        fg: "var(--color-fg)",
+        muted: "var(--color-muted)",
+        line: "var(--color-line)",
+        hover: "var(--color-hover)",
+        select: "var(--color-select)",
+        ok: "var(--color-ok)",
+        bad: "var(--color-bad)",
       },
       fontFamily: {
         display: ["Varela Round", "system-ui", "sans-serif"],

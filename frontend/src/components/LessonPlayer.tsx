@@ -77,12 +77,12 @@ export function LessonPlayer({ lessonId }: { lessonId: number }) {
   const ex = exercises[index];
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-bg">
       <div className="flex items-center gap-3 px-4 py-3">
-        <button type="button" onClick={() => router.push("/")} className="text-2xl text-hare" aria-label="Close">
+        <button type="button" onClick={() => router.push("/")} className="text-2xl text-muted" aria-label="Close">
           ×
         </button>
-        <div className="h-4 flex-1 overflow-hidden rounded-full bg-swan">
+        <div className="h-4 flex-1 overflow-hidden rounded-full bg-line">
           <div className="h-full rounded-full bg-feather transition-all" style={{ width: `${progress}%` }} />
         </div>
         <span className="font-extrabold text-cardinal">❤ {hearts}</span>
@@ -92,7 +92,7 @@ export function LessonPlayer({ lessonId }: { lessonId: number }) {
         <Modal>
           <Owl className="mx-auto h-20 w-20" />
           <h2 className="mt-3 text-center font-display text-2xl font-bold">You ran out of hearts</h2>
-          <p className="mt-2 text-center text-wolf">Practice to refill, or wait — hearts return every 4 hours.</p>
+          <p className="mt-2 text-center text-muted">Practice to refill, or wait — hearts return every 4 hours.</p>
           <div className="mt-6 flex flex-col gap-3">
             <BumpButton
               onClick={async () => {
@@ -125,7 +125,7 @@ export function LessonPlayer({ lessonId }: { lessonId: number }) {
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 py-6">
         {ex && (
           <>
-            <p className="mb-2 text-sm font-extrabold uppercase text-wolf">{data.skill_title}</p>
+            <p className="mb-2 text-sm font-extrabold uppercase text-muted">{data.skill_title}</p>
             <h1 className="mb-6 font-display text-2xl font-bold">{ex.prompt}</h1>
             <ExerciseView exercise={ex} />
           </>
@@ -134,7 +134,7 @@ export function LessonPlayer({ lessonId }: { lessonId: number }) {
 
       <div
         className={`border-t-2 px-4 py-4 ${
-          checked ? (correct ? "border-[#58a700] bg-[#d7ffb8]" : "border-[#ea2b2b] bg-[#ffdfe0]") : "border-swan"
+          checked ? (correct ? "border-feather bg-ok" : "border-cardinal bg-bad") : "border-line"
         }`}
       >
         <div className="mx-auto flex max-w-xl items-center justify-between gap-4">
@@ -143,7 +143,7 @@ export function LessonPlayer({ lessonId }: { lessonId: number }) {
             {checked && !correct && (
               <div>
                 <p className="font-display text-xl font-bold text-cardinal">Correct solution:</p>
-                <p className="font-bold text-eel">{formatAnswer(correctAnswer)}</p>
+                <p className="font-bold text-fg">{formatAnswer(correctAnswer)}</p>
               </div>
             )}
           </div>
@@ -180,7 +180,7 @@ function formatAnswer(answer: unknown) {
 function Modal({ children }: { children: React.ReactNode }) {
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">{children}</div>
+      <div className="w-full max-w-md rounded-3xl bg-surface p-6 shadow-xl">{children}</div>
     </div>
   );
 }

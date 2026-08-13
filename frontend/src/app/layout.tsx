@@ -7,10 +7,13 @@ export const metadata: Metadata = {
   description: "Duolingo-style lesson loop assignment clone",
 };
 
+const themeBoot = `(function(){try{if(localStorage.getItem("lingo-theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
@@ -18,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans">
+      <body className="bg-bg font-sans text-fg">
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -27,6 +27,13 @@ class User(Base):
     progress: Mapped[list["UserProgress"]] = relationship(back_populates="user")
 
 
+class AppMeta(Base):
+    __tablename__ = "app_meta"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[str] = mapped_column(String(120))
+
+
 class Course(Base):
     __tablename__ = "courses"
 

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.database import SessionLocal, engine
-from app.models import Base, Course, Exercise, Lesson, Skill, Unit, User, UserProgress
+from app.models import AppMeta, Base, Course, Exercise, Lesson, Skill, Unit, User, UserProgress
 
 
 def _ex(lesson_id: int, order: int, etype: str, prompt: str, content: dict, solution: dict) -> Exercise:
@@ -18,16 +18,42 @@ def _ex(lesson_id: int, order: int, etype: str, prompt: str, content: dict, solu
     )
 
 
+SEED_VERSION = "v2-unplayed"
+
+
 def seed_if_empty() -> None:
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        if db.query(User).first():
+        if not db.query(User).first():
+            _seed(db)
+            db.add(AppMeta(key="seed_version", value=SEED_VERSION))
+            db.commit()
             return
-        _seed(db)
+        _ensure_unplayed_start(db)
         db.commit()
     finally:
         db.close()
+
+
+def _ensure_unplayed_start(db: Session) -> None:
+    """Existing DBs were seeded with Greetings 1 already done. Clear that once."""
+    row = db.get(AppMeta, "seed_version")
+    if row and row.value == SEED_VERSION:
+        return
+    db.query(UserProgress).delete()
+    default = db.query(User).filter(User.is_default.is_(True)).first()
+    if default:
+        default.total_xp = 0
+        default.current_streak = 0
+        default.xp_today = 0
+        default.xp_today_date = None
+        default.last_active_at = None
+        default.hearts = settings.max_hearts
+    if row:
+        row.value = SEED_VERSION
+    else:
+        db.add(AppMeta(key="seed_version", value=SEED_VERSION))
 
 
 def _seed(db: Session) -> None:
@@ -35,12 +61,12 @@ def _seed(db: Session) -> None:
         User(
             username="aniket",
             display_name="Aniket",
-            total_xp=80,
-            current_streak=5,
-            hearts=4,
-            gems=420,
+            total_xp=0,
+            current_streak=0,
+            hearts=settings.max_hearts,
+            gems=500,
             daily_xp_goal=settings.daily_xp_goal,
-            xp_today=10,
+            xp_today=0,
             is_default=True,
             timezone="Asia/Kolkata",
         ),
@@ -117,7 +143,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 g1.id, 2, "translate_bank", "Translate: Hello",
-                {"bank": ["Hola", "Adiós", "Yo", "casa"]},
+                {"bank": ["casa", "Adiós", "Hola", "Yo"]},
                 {"words": ["Hola"]},
             ),
             _ex(
@@ -145,7 +171,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 g2.id, 2, "translate_bank", "Translate: How are you?",
-                {"bank": ["¿", "Cómo", "estás", "?", "casa", "el"]},
+                {"bank": ["casa", "estás", "el", "¿", "Cómo", "?"]},
                 {"words": ["¿", "Cómo", "estás", "?"]},
             ),
             _ex(
@@ -167,7 +193,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 i1.id, 2, "translate_bank", "Translate: I am Luis",
-                {"bank": ["Yo", "soy", "Luis", "eres", "casa"]},
+                {"bank": ["casa", "Luis", "eres", "soy", "Yo"]},
                 {"words": ["Yo", "soy", "Luis"]},
             ),
             _ex(
@@ -195,7 +221,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 i2.id, 3, "translate_bank", "Translate: Nice to meet you",
-                {"bank": ["Mucho", "gusto", "Adiós", "el"]},
+                {"bank": ["el", "gusto", "Adiós", "Mucho"]},
                 {"words": ["Mucho", "gusto"]},
             ),
         ]
@@ -212,7 +238,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 c1.id, 2, "translate_bank", "Translate: I want coffee",
-                {"bank": ["Quiero", "café", "leche", "el"]},
+                {"bank": ["leche", "el", "café", "Quiero"]},
                 {"words": ["Quiero", "café"]},
             ),
             _ex(
@@ -240,7 +266,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 c2.id, 3, "translate_bank", "Translate: The bread please",
-                {"bank": ["El", "pan", "por", "favor", "casa"]},
+                {"bank": ["casa", "favor", "El", "pan", "por"]},
                 {"words": ["El", "pan", "por", "favor"]},
             ),
         ]
@@ -257,7 +283,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 f1.id, 2, "translate_bank", "Translate: My brother",
-                {"bank": ["Mi", "hermano", "hermana", "el"]},
+                {"bank": ["el", "hermana", "Mi", "hermano"]},
                 {"words": ["Mi", "hermano"]},
             ),
             _ex(
@@ -297,7 +323,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 h1.id, 2, "translate_bank", "Translate: The house is big",
-                {"bank": ["La", "casa", "es", "grande", "pequeña"]},
+                {"bank": ["pequeña", "es", "La", "grande", "casa"]},
                 {"words": ["La", "casa", "es", "grande"]},
             ),
             _ex(
@@ -337,7 +363,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 t1.id, 2, "translate_bank", "Translate: The train",
-                {"bank": ["El", "tren", "avión", "una"]},
+                {"bank": ["una", "avión", "El", "tren"]},
                 {"words": ["El", "tren"]},
             ),
             _ex(
@@ -377,7 +403,7 @@ def _seed(db: Session) -> None:
             ),
             _ex(
                 y1.id, 2, "translate_bank", "Translate: The park",
-                {"bank": ["El", "parque", "calle", "una"]},
+                {"bank": ["calle", "una", "parque", "El"]},
                 {"words": ["El", "parque"]},
             ),
             _ex(
@@ -411,17 +437,4 @@ def _seed(db: Session) -> None:
                 {"index": 0},
             ),
         ]
-    )
-
-    default = learners[0]
-    # Unlock first two skills; complete first greetings lesson
-    first_lesson = lessons_by_skill[skills[0].id][0]
-    db.add(
-        UserProgress(
-            user_id=default.id,
-            skill_id=skills[0].id,
-            lesson_id=first_lesson.id,
-            completed=True,
-            crown_level=1,
-        )
     )
