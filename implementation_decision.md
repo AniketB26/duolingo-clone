@@ -233,3 +233,18 @@ Living log of architectural choices for this Duolingo clone. Each entry records 
 **Rejected:** Leaving the Promise-params page (reproduced the crash). Deleting the user’s home `package-lock.json` (out of project scope).
 
 **Effects:** Greetings in Unit 1 opens the next incomplete lesson without a worker crash.
+
+---
+
+## 16. Pin Python 3.13 on Render (not 3.14)
+
+**Context:** Render’s default interpreter was Python 3.14. `pydantic-core==2.33.1` has no 3.14 wheel, so pip tried to compile Rust (`maturin`) and failed: read-only `/usr/local/cargo`.
+
+**Options:** Upgrade pydantic to a 3.14 wheel; compile Rust on Render; pin `PYTHON_VERSION=3.13.3`.
+
+**Choice:** Pin 3.13.3 via `backend/.python-version`, `runtime.txt`, and Render env `PYTHON_VERSION`. Matches local Python 3.13.3.
+
+**Rejected:** Building pydantic-core from source (no writable Cargo cache). Jumping pydantic versions mid-deploy without testing.
+
+**Effects:** Render must use 3.13. If the dashboard still shows 3.14, set `PYTHON_VERSION` to `3.13.3` and redeploy.
+

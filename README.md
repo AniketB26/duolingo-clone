@@ -98,7 +98,9 @@ Commit and push `main` to GitHub.
 4. **Build:** `pip install -r requirements.txt`
 5. **Start:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 6. Env vars:
+   - `PYTHON_VERSION` = `3.13.3` (required — Render default 3.14 cannot install our pydantic-core wheel)
    - `CORS_ORIGINS` = your Vercel URL (e.g. `https://duolingo-clone.vercel.app`) — you can add this after Vercel exists; meanwhile leave `http://localhost:3000` and rely on the `*.vercel.app` regex already in code.
+   - `DEFAULT_USER_ID` = `1`
 7. Create the service. Copy the Render URL, e.g. `https://duolingo-clone-api.onrender.com`.
 
 Free Render disks can reset; the API **re-seeds an empty database on boot**.
