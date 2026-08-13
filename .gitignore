@@ -21,3 +21,7 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+
+# Local study notes (not for GitHub)
+implementation_decision.md
+INTERVIEW_PREP.md
